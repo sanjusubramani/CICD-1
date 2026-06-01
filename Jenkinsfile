@@ -12,7 +12,9 @@ pipeline {
 
           stage('Unit Test') {
             steps {
-             sh 'mvn test'
+                 dir('payment-app') {
+                    sh 'mvn test'
+                 }   
             }
         }
 
