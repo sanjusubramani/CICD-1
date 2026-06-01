@@ -6,15 +6,15 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'master',
-                url: 'https://github.com/sanjusubramani/CICD-1.git'
+                    url: 'https://github.com/sanjusubramani/CICD-1.git'
             }
         }
 
-          stage('Unit Test') {
+        stage('Unit Test') {
             steps {
-                 dir('payment.app') {
+                dir('payment.app') {
                     sh 'mvn test'
-                 }   
+                }
             }
         }
 
@@ -30,12 +30,12 @@ pipeline {
             steps {
                 dir('payment.app') {
                     withSonarQubeEnv('SonarQube') {
-                         sh 'mvn sonar:sonar'
+                        sh 'mvn sonar:sonar'
                     }
                 }
             }
         }
-        
+
         stage('Quality Gate') {
             steps {
                 waitForQualityGate abortPipeline: true
@@ -55,6 +55,7 @@ pipeline {
                 }
             }
         }
+
         stage('Docker Build') {
             steps {
                 sh 'docker build -t payment-app:v1 .'
@@ -63,32 +64,32 @@ pipeline {
 
         stage('Docker Push') {
             steps {
-            sh '''
-            docker tag payment-app:v1 sanju2024/payment-app:v1
-            docker push sanju2024/payment-app:v1
-            '''
+                sh '''
+                docker tag payment-app:v1 sanju2024/payment-app:v1
+                docker push sanju2024/payment-app:v1
+                '''
             }
         }
 
         stage('Deploy to EC2') {
             steps {
                 sshagent(credentials: ['ec2-key']) {
-                   sh '''
-                   ssh -o StrictHostKeyChecking=no ec2-user@10.10.10.20 << EOF
-            
-                   docker pull sanju2024/payment-app:v1
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ec2-user@10.10.10.20 << EOF
 
-                   docker stop payment-app || true
-                   docker rm payment-app || true 
+                    docker pull sanju2024/payment-app:v1
 
-                   docker run -d \
-                   --restart always \
-                   --name payment-app \
-                   -p 8080:8080 \
-                   sanju2024/payment-app:v1
+                    docker stop payment-app || true
+                    docker rm payment-app || true
 
-                   EOF
-                   ''' 
+                    docker run -d \
+                    --restart always \
+                    --name payment-app \
+                    -p 8080:8080 \
+                    sanju2024/payment-app:v1
+
+                    EOF
+                    '''
                 }
             }
         }
@@ -99,8 +100,10 @@ pipeline {
                     sh '''
                     ssh -o StrictHostKeyChecking=no ec2-user@10.10.10.20 \
                     "curl -f http://localhost:8080/actuator/health"
-                 '''
+                    '''
                 }
             }
-        }        
+        }
+
+    }
 }
