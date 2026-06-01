@@ -28,8 +28,10 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                 sh 'mvn sonar:sonar'
+                dir('payment.app')
+                    withSonarQubeEnv('SonarQube') {
+                         sh 'mvn sonar:sonar
+                    }
                 }
             }
         }
