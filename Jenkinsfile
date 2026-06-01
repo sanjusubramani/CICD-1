@@ -20,7 +20,9 @@ pipeline {
 
         stage('Build') {
             steps {
-             sh 'mvn clean package -DskipTests'
+                dir('payment.app') {
+                    sh 'mvn clean package -DskipTests'
+                }
             }
         }
 
