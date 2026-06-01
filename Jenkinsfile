@@ -28,7 +28,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                dir('payment.app')
+                dir('payment.app') {
                     withSonarQubeEnv('SonarQube') {
                          sh 'mvn sonar:sonar'
                     }
