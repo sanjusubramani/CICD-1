@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/payments")
 public class PaymentController {
 
+    @GetMapping("/health")
+    public String health() {
+        return "UP";
+    }
     private final PaymentService paymentService;
 
     public PaymentController(PaymentService paymentService) {
