@@ -59,7 +59,10 @@ pipeline {
         stage('Docker Build') {
             steps {
                 dir('payment.app') {
-                    sh 'docker build -t payment.app:v1 .'
+                    sh '''
+                    docker build -t payment-app:v1 .
+                    docker images | grep payment-app
+                    '''
                 }
             }
         }
