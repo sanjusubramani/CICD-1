@@ -80,12 +80,12 @@ pipeline {
             steps {
                 sshagent(credentials: ['ec2-key']) {
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ec2-user@18.140.113.219 << EOF
+                    ssh -o StrictHostKeyChecking=no ec2-ubuntu@18.140.113.219 << EOF
 
                     docker pull sanju2024/payment.app:v1
 
-                    docker stop payment-app || true
-                    docker rm payment-app || true
+                    docker stop payment.app || true
+                    docker rm payment.app || true
 
                     docker run -d \
                     --restart always \
@@ -103,7 +103,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['ec2-key']) {
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ec2-user@18.140.113.219 \
+                    ssh -o StrictHostKeyChecking=no ec2-ubuntu@18.140.113.219 \
                     "curl -f http://localhost:8080/actuator/health"
                     '''
                 }
