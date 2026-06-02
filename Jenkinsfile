@@ -58,7 +58,9 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t payment-app:v1 .'
+                dir('payment.app') {
+                    sh 'docker build -t payment.app:v1 .'
+                }
             }
         }
 
@@ -66,7 +68,7 @@ pipeline {
             steps {
                 sh '''
                 docker tag payment-app:v1 sanju2024/payment-app:v1
-                docker push sanju2024/payment-app:v1
+                docker push sanju2024/payment.app:v1
                 '''
             }
         }
