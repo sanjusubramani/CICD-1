@@ -95,14 +95,11 @@ pipeline {
     }
         stage('Health Check') {
             steps {
-                sshagent(['ubuntu']) {
                     sh '''
                     ssh -o StrictHostKeyChecking=no ubuntu@18.140.113.219 \
                     "curl -f http://localhost:8080/api/payments/health"
                     '''
                 }
             }
-        }
-
     }
 }
