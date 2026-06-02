@@ -60,8 +60,8 @@ pipeline {
             steps {
                 dir('payment.app') {
                     sh '''
-                    docker build -t payment-app:v1 .
-                    docker images | grep payment-app
+                    docker build -t payment.app:v1 .
+                    docker images | grep payment.app
                     '''
                 }
             }
@@ -70,7 +70,7 @@ pipeline {
         stage('Docker Push') {
             steps {
                 sh '''
-                docker tag payment-app:v1 sanju2024/payment-app:v1
+                docker tag payment.app:v1 sanju2024/payment.app:v1
                 docker push sanju2024/payment.app:v1
                 '''
             }
@@ -82,16 +82,16 @@ pipeline {
                     sh '''
                     ssh -o StrictHostKeyChecking=no ec2-user@10.10.10.20 << EOF
 
-                    docker pull sanju2024/payment-app:v1
+                    docker pull sanju2024/payment.app:v1
 
                     docker stop payment-app || true
                     docker rm payment-app || true
 
                     docker run -d \
                     --restart always \
-                    --name payment-app \
+                    --name payment.app \
                     -p 8080:8080 \
-                    sanju2024/payment-app:v1
+                    sanju2024/payment.app:v1
 
                     EOF
                     '''
