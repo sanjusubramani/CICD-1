@@ -76,29 +76,23 @@ pipeline {
             }
         }
 
-        stage('Deploy to EC2') {
-            steps {
-                sshagent(credentials: ['ec2-key']) {
-                    sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@18.140.113.219 << EOF
-
-                    docker pull sanju2024/payment.app:v1
-
-                    docker stop payment.app || true
-                    docker rm payment.app || true
-
-                    docker run -d \
-                    --restart always \
-                    --name payment.app \
-                    -p 8080:8080 \
-                    sanju2024/payment.app:v1
-
-                    EOF
-                    '''
-                }
+      stage('Deploy to EC2') {
+          steps {
+              sshagent(credentials: ['ec2-key']) {
+                  sh '''
+                  ssh -o StrictHostKeyChecking=no ubuntu@18.140.113.219 "
+                  docker pull sanju2024/payment.app:v1 &&
+                  docker stop payment.app || true &&
+                  docker rm payment.app || true &&
+                  docker run -d --restart always \
+                  --name payment.app \
+                  -p 8080:8080 \
+                  sanju2024/payment.app:v1
+                 "
+                 '''            
             }
         }
-
+    }
         stage('Health Check') {
             steps {
                 sshagent(credentials: ['ec2-key']) {
