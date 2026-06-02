@@ -97,6 +97,8 @@ pipeline {
             steps {
                 sshagent(['ec2-key']) {
                     sh '''
+                        sleep 15
+                         
                         ssh -o StrictHostKeyChecking=no ubuntu@18.140.113.219 \
                         "curl -f http://localhost:8080/api/payments/health"
                     '''
